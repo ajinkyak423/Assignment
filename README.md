@@ -244,7 +244,7 @@ After the container restarts, WordPress should be able to connect to the RDS dat
     
     ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/w.png)
     
-- If we are creating wp-config.php file manually we get this messages
+- If we are creating `wp-config.php` file manually we get this messages
     
     ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/work.png)
     
