@@ -1,35 +1,35 @@
-# Step: 1 Create a Terraform script to deploy a VM. The VM should be in public subnet.
+# Step: 1 Create a Terraform script to deploy a VM . VM should be in public subnet.
 
 - Initially Terraform and AWS CLI setup is done using official documentation
 - I have written a Terraform Script utilizing concept of variable file for easy update and maintains
 - Explanation of script:
     1. VPC (**`aws_vpc`**):
-        - It creates a VPC with the specified CIDR block and enables DNS hostnames.
+        - Creates a VPC with the specified CIDR block and enables DNS hostnames.
     2. Internet Gateway (**`aws_internet_gateway`**):
-        - It creates an internet gateway and associates it with the VPC.
+        - Creates an internet gateway and associates it with the VPC.
     3. Public Subnet (**`aws_subnet`**):
-        - It creates a public subnet within the VPC with the specified CIDR block.
-        - The **`map_public_ip_on_launch`** attribute is set to true, which automatically assigns a public IP to instances launched in this subnet.
+        - Creates a public subnet within the VPC with the specified CIDR block.
+        - **`map_public_ip_on_launch`** attribute is set to true, which automatically assigns a public IP to instances launched in this subnet.
     4. Public Route Table (**`aws_route_table`**):
-        - It creates a public route table associated with the VPC.
-        - It defines a default route (**`0.0.0.0/0`**) that directs traffic to the internet gateway.
+        - Creates a public route table associated with the VPC.
+        - Defines a default route (**`0.0.0.0/0`**) that directs traffic to the internet gateway.
     
     1. Public Subnet Route Table Association (**`aws_route_table_association`**):
-        - It associates the public subnet with the public route table.
+        - Associates the public subnet with the public route table.
     2. Private Subnet (**`aws_subnet`**):
-        - It creates a private subnet within the VPC with the specified CIDR block.
-        - The **`map_public_ip_on_launch`** attribute is set to false, which means instances in this subnet won't have a public IP automatically assigned.
+        - Creates a private subnet within the VPC with the specified CIDR block.
+        - **`map_public_ip_on_launch`** attribute is set to false, which means instances in this subnet won't have a public IP automatically assigned.
     3. Public Security Group (**`aws_security_group`**):
-        - It creates a security group allowing inbound SSH (port 22) and HTTP (port 80) traffic from any IP (**`0.0.0.0/0`**).
-        - It allows all outbound traffic (**`0.0.0.0/0`**).
+        - Creates a security group allowing inbound SSH (port 22) and HTTP (port 80) traffic from any IP (**`0.0.0.0/0`**).
+        - Allows all outbound traffic (**`0.0.0.0/0`**).
     4. Private Key (**`tls_private_key`**):
-        - It generates an RSA private key to be used for SSH access to the EC2 instance.
+        - Generates an RSA private key to be used for SSH access to the EC2 instance.
     5. Key Pair (**`aws_key_pair`**):
-        - It creates an AWS key pair with the generated RSA public key.
+        - Creates an AWS key pair with the generated RSA public key.
     6. Local File (**`local_file`**):
-        - It saves the generated RSA private key to a local file named "TfKey".
+        - Saves the generated RSA private key to a local file named "TfKey".
     7. EC2 Instance (**`aws_instance`**):
-        - It creates an EC2 instance using the specified AMI, instance type, subnet, security group, public IP association, key pair, and tags.
+        - Creates an EC2 instance using the specified AMI, instance type, subnet, security group, public IP association, key pair, and tags.
              
 
 # Step: 2 In the same VM Create a Dockerfile to deploy Apache webserver + PHP + Wordpress.
@@ -39,19 +39,19 @@ Docker image with Apache and PHP, installs required PHP extensions, and download
 1. Base Image:
     - It starts with the `php:7.4-apache` base image, which includes Apache and PHP.
 2. ARG Variables:
-    - It sets the `WORDPRESS_VERSION` and `WORDPRESS_DOWNLOAD_URL` as ARG variables. You can specify the WordPress version and download URL during the build process.
+    - Sets the `WORDPRESS_VERSION` and `WORDPRESS_DOWNLOAD_URL` as ARG variables. You can specify the WordPress version and download URL during the build process.
 3. Working Directory:
-    - It sets the working directory to `/var/www/html`.
+    - Sets the working directory to `/var/www/html`.
 4. Copy WordPress Files:
-    - It copies the WordPress files from the build context to the working directory in the container. The `.` specifies that you are copying all the files from the build context.
+    - Copies the WordPress files from the build context to the working directory in the container. The `.` specifies that you are copying all the files from the build context.
 5. Install PHP Extensions:
-    - It installs the `mysqli` PHP extension using the `docker-php-ext-install` command. This extension is required by WordPress for database connectivity.
+    - Installs the `mysqli` PHP extension using the `docker-php-ext-install` command. This extension is required by WordPress for database connectivity.
 6. Download and Extract WordPress:
-    - It uses the `curl` command to download the WordPress archive from the specified `WORDPRESS_DOWNLOAD_URL`.
+    - Uses the `curl` command to download the WordPress archive from the specified `WORDPRESS_DOWNLOAD_URL`.
     - The `tar` command extracts the downloaded archive and the `-strip-components=1` option removes the top-level directory from the extracted files.
     - Finally, the downloaded WordPress archive is removed using the `rm` command.
 7. Set Entrypoint:
-    - It sets the entrypoint to `apache2-foreground`, which starts the Apache web server when the container is run.
+    - Sets the entrypoint to `apache2-foreground`, which starts the Apache web server when the container is run.
 
 To build an image from this Dockerfile, navigate to the directory containing the Dockerfile and run the `docker build` command. For example:
 
@@ -60,7 +60,8 @@ docker build -t wordpress:v1 .
 
 ```
 
-This command builds the Docker image with the tag `wordpress:v1` using the Dockerfile in the current directory (`.`). You can replace `wordpress:v1` with the desired image name and tag.
+This command builds the Docker image with the tag `wordpress:v1` using the Dockerfile in the current directory (`.`). 
+You can replace `wordpress:v1` with the desired image name and tag.
 
 Once the image is built, you can run a container from it using the `docker run` command, as you did before.
 
