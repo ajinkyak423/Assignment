@@ -1,5 +1,3 @@
-# assignment
-
 # Step: 1 Create a Terraform script to deploy a VM. The VM should be in public subnet.
 
 - Initially Terraform and AWS CLI setup is done using official documentation
@@ -15,27 +13,28 @@
     4. Public Route Table (**`aws_route_table`**):
         - It creates a public route table associated with the VPC.
         - It defines a default route (**`0.0.0.0/0`**) that directs traffic to the internet gateway.
-    5. Public Subnet Route Table Association (**`aws_route_table_association`**):
+    
+    1. Public Subnet Route Table Association (**`aws_route_table_association`**):
         - It associates the public subnet with the public route table.
-    6. Private Subnet (**`aws_subnet`**):
+    2. Private Subnet (**`aws_subnet`**):
         - It creates a private subnet within the VPC with the specified CIDR block.
         - The **`map_public_ip_on_launch`** attribute is set to false, which means instances in this subnet won't have a public IP automatically assigned.
-    7. Public Security Group (**`aws_security_group`**):
+    3. Public Security Group (**`aws_security_group`**):
         - It creates a security group allowing inbound SSH (port 22) and HTTP (port 80) traffic from any IP (**`0.0.0.0/0`**).
         - It allows all outbound traffic (**`0.0.0.0/0`**).
-    8. Private Key (**`tls_private_key`**):
+    4. Private Key (**`tls_private_key`**):
         - It generates an RSA private key to be used for SSH access to the EC2 instance.
-    9. Key Pair (**`aws_key_pair`**):
+    5. Key Pair (**`aws_key_pair`**):
         - It creates an AWS key pair with the generated RSA public key.
-    10. Local File (**`local_file`**):
+    6. Local File (**`local_file`**):
         - It saves the generated RSA private key to a local file named "TfKey".
-    11. EC2 Instance (**`aws_instance`**):
+    7. EC2 Instance (**`aws_instance`**):
         - It creates an EC2 instance using the specified AMI, instance type, subnet, security group, public IP association, key pair, and tags.
-        
+             
 
-# Step: 2 In the same VM Create a Dockerfile to deploy Apache webserver + PHP + WordPress.
+# Step: 2 In the same VM Create a Dockerfile to deploy Apache webserver + PHP + Wordpress.
 
-Docker image with Apache and PHP, install required PHP extensions, and download and extracts the WordPress files. Here's a breakdown of the Dockerfile:
+Docker image with Apache and PHP, installs required PHP extensions, and downloads and extracts the WordPress files. Here's a breakdown of the Dockerfile:
 
 1. Base Image:
     - It starts with the `php:7.4-apache` base image, which includes Apache and PHP.
@@ -205,3 +204,52 @@ To connect your WordPress container with an RDS database, you need to provide th
     
 
 After the container restarts, WordPress should be able to connect to the RDS database using the provided configuration. Ensure that the RDS database security group allows incoming connections from the WordPress container's security group. Also, make sure that the network configuration of your EC2 instance or Docker setup allows connectivity between the WordPress container and the RDS database.
+
+# Results:
+
+- We have created Terraform file in which initially do inti and do plan
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/Screenshot%202023-06-21%20220136.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/vpcplan.png)
+    
+
+- Using terraform apply we created all the infrastructure
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/allcreated.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/vpc.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/gateway.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/route.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/subnet.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/vmcreation.png)
+    
+- Then we create docker file and build image and push it on Docker hub
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/ogdockerimagepush.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/1dockerhub.png)
+    
+- We can see that WordPress container is accessible on Ip address of Ec2 instance
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/wordpress.png)
+    
+
+- We are give option to add credentials to WordPress using our RDS database
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/w.png)
+    
+- If we are creating wp-config.php file manually we get this messages
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/work.png)
+    
+    ![Untitled](https://github.com/ajinkyak423/assignment/blob/main/screenshots/working.png)
+    
+
+# Conclusion:
+
+I have implemented all the required steps of Terraform and build infrastructure while creating docker image and pushing it on docker hub. Also we can access WordPress and connect RDS database with config file.
